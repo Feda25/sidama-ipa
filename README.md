@@ -25,3 +25,36 @@ If you have downloaded or cloned this repository, you can install it locally for
 
 ```bash
 pip install -e .
+
+# Usage example one 
+from sidama_ipa import SidamaSpellChecker
+
+checker = SidamaSpellChecker()
+
+# Test a valid headword
+is_valid, msg = checker.validate("madda")
+print(is_valid)  # Output: True
+
+# Test an invalid word (violates Rule 3: >2 identical vowels)
+is_valid, msg = checker.validate("aaandd")
+print(msg)  # Output: Rule 3 violation: Sequence of more than two identical vowels ('aaa') detected.
+
+# Usage example two
+from sidama_ipa import SidamaIPAConverter, SidamaSpellChecker
+
+converter = SidamaIPAConverter()
+checker = SidamaSpellChecker()
+
+headwords = ["chanya", "aaandd", "maaeela", "mm", "giddo"]
+
+print(f"{'Headword':<10} | {'Status':<8} | {'IPA / Error Message'}")
+print("-" * 50)
+
+for word in headwords:
+    is_valid, message = checker.validate(word)
+    if is_valid:
+        ipa = converter.convert(word)
+        print(f"{word:<10} | {'Valid':<8} | /{ipa}/")
+    else:
+        print(f"{word:<10} | {'Invalid':<8} | {message}")
+
